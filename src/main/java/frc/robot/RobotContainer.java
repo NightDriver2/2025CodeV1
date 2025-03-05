@@ -11,27 +11,35 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.ElevatorDown;
+import frc.robot.commands.ElevatorUp;
+import frc.robot.commands.IndexMove;
+import frc.robot.subsystems.Elevator;
+import frc.robot.subsystems.Index;
 import frc.robot.subsystems.SwerveDrive.SwerveSubsystem;
 
 import java.io.File;
 import swervelib.SwerveInputStream;
 
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
- * little robot logic should actually be handled in the {@link Robot} periodic methods (other than the scheduler calls).
- * Instead, the structure of the robot (including subsystems, commands, and trigger mappings) should be declared here.
- */
+
 public class RobotContainer
 {
-  final CommandXboxController driverController = new CommandXboxController(0);
-
+  private final Elevator elevator = new Elevator();
+  private final Index index = new Index();
   private final SwerveSubsystem drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                       "swerve/neo"));
+  
+                                                                                      
+  //Controles :)                                                                                    
+  final CommandXboxController driverController = new CommandXboxController(0);
+  private static final XboxController subsystemController = new XboxController(1);
 
   /**
    * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
@@ -103,7 +111,7 @@ public class RobotContainer
    */
   private void configureBindings()
   {
-
+    //Control Chassis
     Command driveFieldOrientedDirectAngle      = drivebase.driveFieldOriented(driveDirectAngle);
     Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
     Command driveRobotOrientedAngularVelocity  = drivebase.driveFieldOriented(driveRobotOriented);
@@ -152,16 +160,16 @@ public class RobotContainer
                               driverController.rightBumper().onTrue(Commands.none());
     }
 
+    //Control Subsystems
+    new JoystickButton(subsystemController, 3).whileTrue(new ElevatorDown(elevator));
+    new JoystickButton(subsystemController, 2).whileTrue(new ElevatorUp(elevator));
+
+    new JoystickButton(subsystemController, 1).whileTrue(new IndexMove(index));
   }
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
+
   public Command getAutonomousCommand()
   {
-    // An example command will be run in autonomous
     return drivebase.getAutonomousCommand("New Auto");
   }
 
