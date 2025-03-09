@@ -124,7 +124,7 @@ public class RobotContainer
 
     if (RobotBase.isSimulation())
     {
-      drivebase.setDefaultCommand(driveFieldOrientedDirectAngleKeyboard);
+      drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocityKeyboard);
     } else
     {
       drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
@@ -161,10 +161,15 @@ public class RobotContainer
     }
 
     //Control Subsystems
-    new JoystickButton(subsystemController, 3).whileTrue(new ElevatorDown(elevator));
-    new JoystickButton(subsystemController, 2).whileTrue(new ElevatorUp(elevator));
+    //new JoystickButton(subsystemController, 3).whileTrue(new ElevatorDown(elevator));
+    //new JoystickButton(subsystemController, 2).whileTrue(new ElevatorUp(elevator));
 
     new JoystickButton(subsystemController, 1).whileTrue(new IndexMove(index));
+
+    new JoystickButton(subsystemController, 2).whileTrue(elevator.goToPosition(0));
+    new JoystickButton(subsystemController, 3).whileTrue(elevator.goToPosition(4.56)); //L2
+    new JoystickButton(subsystemController, 4).whileTrue(elevator.goToPosition(20.5)); //L3
+    //new JoystickButton(subsystemController, 5).whileTrue(elevator.goToPosition(60));
   }
 
 

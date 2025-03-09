@@ -35,4 +35,24 @@ public final class Constants
     public static final double RIGHT_X_DEADBAND = 0.1;
     public static final double TURN_CONSTANT    = 6;
   }
+
+  public static class ElevatorConstants {
+    public static final double diameterSpool = 1.75;
+    public static final double pulsePerRevolution = 8192;
+
+
+    public static final double circumference = (Math.PI*(diameterSpool*2.54));
+    public static final double distancePerRotation = (circumference/22);
+    public static final double distancePerPulse = (distancePerRotation/pulsePerRevolution);
+
+    public static final double kP = 0.1;
+    public static final double kI = 0;
+    public static final double kD = 0.001;
+
+    public static final double kS = 0;
+    public static final double kG = 0;
+    public static final double kV = 0;
+    public static final double kA = 0;
+  }
+
 }
